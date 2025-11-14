@@ -61,7 +61,9 @@ const CacheButton = () => {
   }
 
   const [count, setCount] = useState(Object.keys(lyrics).length);
-  const text = count ? "캐시된 모든 가사 삭제" : "캐시된 가사 없음";
+  const text = count
+    ? i18n("settings.translation.provider.removecache")
+    : i18n("settings.translation.provider.nocache");
 
   return react.createElement(
     "button",
@@ -1275,7 +1277,7 @@ const ConfigModal = () => {
           const response = await fetch(
             "https://api.github.com/repos/ivLis-Studio/lyrics-plus/releases/latest"
           );
-          
+
           if (!response.ok) {
             throw new Error("Failed to fetch release notes");
           }
@@ -1289,59 +1291,114 @@ const ConfigModal = () => {
                 day: "numeric",
               })
             : "Unknown";
-          
+
           // Markdown을 HTML로 변환
           let body = data.body || "패치 노트가 없습니다.";
-          
+
           // 마크다운 변환 (순서 중요)
           body = body
             // 코드 블록 먼저 처리 (```로 감싼 부분)
             .replace(/```[\s\S]*?```/g, (match) => {
-              return `<pre style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 6px; overflow-x: auto; margin: 12px 0;"><code style="font-family: monospace; font-size: 13px; color: rgba(255,255,255,0.9);">${match.slice(3, -3).trim()}</code></pre>`;
+              return `<pre style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 6px; overflow-x: auto; margin: 12px 0;"><code style="font-family: monospace; font-size: 13px; color: rgba(255,255,255,0.9);">${match
+                .slice(3, -3)
+                .trim()}</code></pre>`;
             })
             // 헤딩 처리
-            .replace(/^#### (.*?)$/gm, '<h5 style="margin: 14px 0 6px; color: #ffffff; font-size: 15px; font-weight: 600;">$1</h5>')
-            .replace(/^### (.*?)$/gm, '<h4 style="margin: 16px 0 8px; color: #ffffff; font-size: 16px; font-weight: 600;">$1</h4>')
-            .replace(/^## (.*?)$/gm, '<h3 style="margin: 20px 0 10px; color: #ffffff; font-size: 18px; font-weight: 700;">$1</h3>')
-            .replace(/^# (.*?)$/gm, '<h2 style="margin: 24px 0 12px; color: #ffffff; font-size: 20px; font-weight: 700;">$1</h2>')
+            .replace(
+              /^#### (.*?)$/gm,
+              '<h5 style="margin: 14px 0 6px; color: #ffffff; font-size: 15px; font-weight: 600;">$1</h5>'
+            )
+            .replace(
+              /^### (.*?)$/gm,
+              '<h4 style="margin: 16px 0 8px; color: #ffffff; font-size: 16px; font-weight: 600;">$1</h4>'
+            )
+            .replace(
+              /^## (.*?)$/gm,
+              '<h3 style="margin: 20px 0 10px; color: #ffffff; font-size: 18px; font-weight: 700;">$1</h3>'
+            )
+            .replace(
+              /^# (.*?)$/gm,
+              '<h2 style="margin: 24px 0 12px; color: #ffffff; font-size: 20px; font-weight: 700;">$1</h2>'
+            )
             // 인라인 코드
-            .replace(/`([^`]+)`/g, '<code style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.9em; color: #fbbf24;">$1</code>')
+            .replace(
+              /`([^`]+)`/g,
+              '<code style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.9em; color: #fbbf24;">$1</code>'
+            )
             // 볼드와 이탤릭
-            .replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>')
-            .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-            .replace(/\*(.+?)\*/g, '<em>$1</em>')
+            .replace(/\*\*\*(.+?)\*\*\*/g, "<strong><em>$1</em></strong>")
+            .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+            .replace(/\*(.+?)\*/g, "<em>$1</em>")
             // 링크
-            .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" style="color: #60a5fa; text-decoration: none; border-bottom: 1px solid rgba(96, 165, 250, 0.3); transition: border-color 0.2s;" onmouseover="this.style.borderBottomColor=\'rgba(96, 165, 250, 0.8)\'" onmouseout="this.style.borderBottomColor=\'rgba(96, 165, 250, 0.3)\'">$1</a>')
+            .replace(
+              /\[([^\]]+)\]\(([^)]+)\)/g,
+              '<a href="$2" target="_blank" style="color: #60a5fa; text-decoration: none; border-bottom: 1px solid rgba(96, 165, 250, 0.3); transition: border-color 0.2s;" onmouseover="this.style.borderBottomColor=\'rgba(96, 165, 250, 0.8)\'" onmouseout="this.style.borderBottomColor=\'rgba(96, 165, 250, 0.3)\'">$1</a>'
+            )
             // 체크박스 리스트
-            .replace(/^- \[x\] (.*?)$/gm, '<li style="margin: 6px 0; list-style: none;"><span style="color: #4ade80; margin-right: 6px;">✓</span>$1</li>')
-            .replace(/^- \[ \] (.*?)$/gm, '<li style="margin: 6px 0; list-style: none;"><span style="color: rgba(255,255,255,0.3); margin-right: 6px;">○</span>$1</li>')
+            .replace(
+              /^- \[x\] (.*?)$/gm,
+              '<li style="margin: 6px 0; list-style: none;"><span style="color: #4ade80; margin-right: 6px;">✓</span>$1</li>'
+            )
+            .replace(
+              /^- \[ \] (.*?)$/gm,
+              '<li style="margin: 6px 0; list-style: none;"><span style="color: rgba(255,255,255,0.3); margin-right: 6px;">○</span>$1</li>'
+            )
             // 일반 리스트 (-, *, +)
-            .replace(/^[\-\*\+] (.*?)$/gm, '<li style="margin: 6px 0; padding-left: 4px;">$1</li>')
+            .replace(
+              /^[\-\*\+] (.*?)$/gm,
+              '<li style="margin: 6px 0; padding-left: 4px;">$1</li>'
+            )
             // 숫자 리스트
-            .replace(/^\d+\. (.*?)$/gm, '<li style="margin: 6px 0; padding-left: 4px;">$1</li>')
+            .replace(
+              /^\d+\. (.*?)$/gm,
+              '<li style="margin: 6px 0; padding-left: 4px;">$1</li>'
+            )
             // 블록쿼트
-            .replace(/^> (.*?)$/gm, '<blockquote style="margin: 12px 0; padding-left: 16px; border-left: 3px solid rgba(96, 165, 250, 0.5); color: rgba(255,255,255,0.7); font-style: italic;">$1</blockquote>')
+            .replace(
+              /^> (.*?)$/gm,
+              '<blockquote style="margin: 12px 0; padding-left: 16px; border-left: 3px solid rgba(96, 165, 250, 0.5); color: rgba(255,255,255,0.7); font-style: italic;">$1</blockquote>'
+            )
             // 구분선
-            .replace(/^---$/gm, '<hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0;" />')
-            .replace(/^\*\*\*$/gm, '<hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0;" />')
+            .replace(
+              /^---$/gm,
+              '<hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0;" />'
+            )
+            .replace(
+              /^\*\*\*$/gm,
+              '<hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0;" />'
+            )
             // 줄바꿈 처리 (두 번 연속된 줄바꿈은 단락 구분)
-            .replace(/\n\n/g, '</p><p style="margin: 12px 0; line-height: 1.7;">');
+            .replace(
+              /\n\n/g,
+              '</p><p style="margin: 12px 0; line-height: 1.7;">'
+            );
 
           // li 태그들을 ul/ol로 감싸기
-          body = body.replace(/(<li[^>]*>.*?<\/li>(\s|<br\/>)*)+/gs, (match) => {
-            // 체크박스나 일반 리스트인 경우
-            if (match.includes('list-style: none')) {
-              return `<ul style="margin: 8px 0 16px; padding-left: 8px; list-style: none;">${match}</ul>`;
+          body = body.replace(
+            /(<li[^>]*>.*?<\/li>(\s|<br\/>)*)+/gs,
+            (match) => {
+              // 체크박스나 일반 리스트인 경우
+              if (match.includes("list-style: none")) {
+                return `<ul style="margin: 8px 0 16px; padding-left: 8px; list-style: none;">${match}</ul>`;
+              }
+              return `<ul style="margin: 8px 0 16px; padding-left: 24px; list-style: disc;">${match}</ul>`;
             }
-            return `<ul style="margin: 8px 0 16px; padding-left: 24px; list-style: disc;">${match}</ul>`;
-          });
+          );
 
           // 시작 p 태그 추가
-          if (!body.startsWith('<h') && !body.startsWith('<ul') && !body.startsWith('<pre')) {
+          if (
+            !body.startsWith("<h") &&
+            !body.startsWith("<ul") &&
+            !body.startsWith("<pre")
+          ) {
             body = `<p style="margin: 12px 0; line-height: 1.7;">${body}`;
           }
           // 끝 p 태그 추가
-          if (!body.endsWith('</p>') && !body.endsWith('</ul>') && !body.endsWith('</pre>')) {
+          if (
+            !body.endsWith("</p>") &&
+            !body.endsWith("</ul>") &&
+            !body.endsWith("</pre>")
+          ) {
             body = `${body}</p>`;
           }
 
@@ -1434,7 +1491,7 @@ const ConfigModal = () => {
                   "https://github.com/ivLis-Studio/lyrics-plus",
                   "_blank"
                 ),
-              title: "GitHub 저장소 방문",
+              title: i18n("settings.heading.github.desc"),
             },
             react.createElement("svg", {
               width: 16,
@@ -1446,18 +1503,15 @@ const ConfigModal = () => {
                   '<path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>',
               },
             }),
-            react.createElement("span", null, "GitHub")
+            react.createElement("span", null, i18n("settings.heading.github"))
           ),
           react.createElement(
             "button",
             {
               className: "settings-coffee-btn",
               onClick: () =>
-                window.open(
-                  "https://buymeacoffee.com/ivlis",
-                  "_blank"
-                ),
-              title: "개발자에게 커피 한잔 사주기",
+                window.open("https://buymeacoffee.com/ivlis", "_blank"),
+              title: i18n("settings.heading.support.desc"),
             },
             react.createElement("svg", {
               width: 16,
@@ -1469,7 +1523,7 @@ const ConfigModal = () => {
                   '<path d="M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4z"/>',
               },
             }),
-            react.createElement("span", null, "후원")
+            react.createElement("span", null, i18n("settings.heading.support"))
           )
         )
       )
@@ -2338,42 +2392,42 @@ const ConfigModal = () => {
       { className: "settings-tabs" },
       react.createElement(TabButton, {
         id: "general",
-        label: "일반",
+        label: i18n("settings.general.title"),
         icon: "",
         isActive: activeTab === "general",
         onClick: setActiveTab,
       }),
       react.createElement(TabButton, {
         id: "appearance",
-        label: "외관",
+        label: i18n("settings.appearance.title"),
         icon: "",
         isActive: activeTab === "appearance",
         onClick: setActiveTab,
       }),
       react.createElement(TabButton, {
         id: "lyrics",
-        label: "동작",
+        label: i18n("settings.lyrics.title"),
         icon: "",
         isActive: activeTab === "lyrics",
         onClick: setActiveTab,
       }),
       react.createElement(TabButton, {
         id: "translation",
-        label: "제공자",
+        label: i18n("settings.translation.title"),
         icon: "",
         isActive: activeTab === "translation",
         onClick: setActiveTab,
       }),
       react.createElement(TabButton, {
         id: "advanced",
-        label: "고급",
+        label: i18n("settings.advanced.title"),
         icon: "",
         isActive: activeTab === "advanced",
         onClick: setActiveTab,
       }),
       react.createElement(TabButton, {
         id: "about",
-        label: "정보",
+        label: i18n("settings.about.title"),
         icon: "",
         isActive: activeTab === "about",
         onClick: setActiveTab,
@@ -2389,8 +2443,8 @@ const ConfigModal = () => {
           className: `tab-content ${activeTab === "general" ? "active" : ""}`,
         },
         react.createElement(SectionTitle, {
-          title: "시각 효과",
-          subtitle: "가사 화면의 시각적 요소를 커스터마이징하세요",
+          title: i18n("settings.general.visual"),
+          subtitle: i18n("settings.general.visual.subtitle"),
         }),
         // FAD 경고 메시지
         isFadActive &&
@@ -2414,7 +2468,7 @@ const ConfigModal = () => {
                     className: "setting-name",
                     style: { color: "var(--spice-text)", fontWeight: "600" },
                   },
-                  "⚠️ Full Screen 확장 프로그램 사용 중"
+                  i18n("settings.general.visual.usingfullscreen")
                 ),
                 react.createElement(
                   "div",
@@ -2422,9 +2476,9 @@ const ConfigModal = () => {
                     className: "setting-description",
                     style: { color: "var(--spice-subtext)" },
                   },
-                  "Full Screen 확장 프로그램 사용 중에는 지원하지 않습니다.",
+                  i18n("settings.general.visual.usingfullscreen.desc1"),
                   react.createElement("br"),
-                  "정렬 방식은 Full Screen 자체 설정에서 변경하십시오."
+                  i18n("settings.general.visual.usingfullscreen.desc2")
                 )
               )
             )
@@ -2432,28 +2486,28 @@ const ConfigModal = () => {
         react.createElement(OptionList, {
           items: [
             {
-              desc: "정렬 방식",
+              desc: i18n("settings.general.visual.alignment"),
               key: "alignment",
-              info: "가사 텍스트의 정렬 위치를 선택하세요",
+              info: i18n("settings.general.visual.alignment.desc"),
               type: ConfigSelection,
               disabled: isFadActive,
               options: {
-                left: "왼쪽",
-                center: "가운데",
-                right: "오른쪽",
+                left: i18n("settings.general.visual.alignment.left"),
+                center: i18n("settings.general.visual.alignment.center"),
+                right: i18n("settings.general.visual.alignment.right"),
               },
             },
             {
-              desc: "노이즈 오버레이",
+              desc: i18n("settings.general.visual.noise"),
               key: "noise",
-              info: "배경에 필름 그레인 효과를 추가합니다",
+              info: i18n("settings.general.visual.noise.desc"),
               type: ConfigSlider,
               disabled: isFadActive,
             },
             {
-              desc: "컬러풀 배경",
+              desc: i18n("settings.general.visual.colorful"),
               key: "colorful",
-              info: "앨범 색상 기반의 동적 배경을 활성화합니다",
+              info: i18n("settings.general.visual.colorful.desc"),
               type: ConfigSlider,
               disabled: isFadActive,
             },
@@ -3314,8 +3368,8 @@ const ConfigModal = () => {
           }`,
         },
         react.createElement(SectionTitle, {
-          title: "가사 제공자",
-          subtitle: "가사 소스의 우선순위와 설정을 관리하세요",
+          title: i18n("settings.translation.provider"),
+          subtitle: i18n("settings.translation.provider.subtitle"),
         }),
         react.createElement(ServiceList, {
           itemsList: CONFIG.providersOrder,
@@ -3435,7 +3489,10 @@ const ConfigModal = () => {
                 try {
                   const cfg = await StorageManager.exportConfig();
                   console.log("[Settings] Config before serialize:", cfg);
-                  console.log("[Settings] Has track-sync-offsets:", "lyrics-plus:track-sync-offsets" in cfg);
+                  console.log(
+                    "[Settings] Has track-sync-offsets:",
+                    "lyrics-plus:track-sync-offsets" in cfg
+                  );
                   const u8 = settingsObject.serialize(cfg);
                   // download as file
                   const blob = new Blob([u8], {
@@ -3646,7 +3703,7 @@ const ConfigModal = () => {
 														</div>
 													</div>
 												</div>`;
-                        
+
                         // 1.5초 후 자동 새로고침
                         setTimeout(() => {
                           location.reload();
@@ -3774,7 +3831,7 @@ const ConfigModal = () => {
                       keysToRemove.push(key);
                     }
                   }
-                  
+
                   keysToRemove.forEach((key) => {
                     localStorage.removeItem(key);
                   });
@@ -3840,8 +3897,8 @@ const ConfigModal = () => {
 													<div>
 														<div style="font-weight: 600; margin-bottom: 2px;">초기화 실패</div>
 														<div style="opacity: 0.8; font-size: 12px;">${
-                            e.message || e.reason || e.toString()
-                          }</div>
+                              e.message || e.reason || e.toString()
+                            }</div>
 													</div>
 												</div>
 											</div>
@@ -3863,8 +3920,8 @@ const ConfigModal = () => {
           className: `tab-content ${activeTab === "about" ? "active" : ""}`,
         },
         react.createElement(SectionTitle, {
-          title: "앱 정보",
-          subtitle: "Lyrics Plus에 대해",
+          title: i18n("settings.about.app"),
+          subtitle: i18n("settings.about.app.subtitle"),
         }),
         react.createElement(
           "div",
@@ -3893,7 +3950,7 @@ const ConfigModal = () => {
               },
             },
             react.createElement("span", null, "🎵"),
-            "Lyrics Plus"
+            i18n("settings.about.app.name")
           ),
           react.createElement(
             "p",
@@ -3904,7 +3961,7 @@ const ConfigModal = () => {
                 lineHeight: "1.6",
               },
             },
-            "Spicetify를 위한 한국어 대응 가사 확장 프로그램."
+            i18n("settings.about.app.desc")
           ),
           react.createElement(
             "p",
@@ -3915,7 +3972,7 @@ const ConfigModal = () => {
                 fontSize: "14px",
               },
             },
-            `버전: ${Utils.currentVersion}`
+            `${i18n("settings.about.app.version")}: ${Utils.currentVersion}`
           ),
           react.createElement("div", {
             style: {
@@ -3933,7 +3990,11 @@ const ConfigModal = () => {
                 lineHeight: "1.6",
               },
             },
-            react.createElement("strong", null, "개발:"),
+            react.createElement(
+              "strong",
+              null,
+              i18n("settings.about.app.development") + ":"
+            ),
             " ivLis Studio"
           ),
           react.createElement(
@@ -3945,7 +4006,11 @@ const ConfigModal = () => {
                 lineHeight: "1.6",
               },
             },
-            react.createElement("strong", null, "원본 프로젝트:"),
+            react.createElement(
+              "strong",
+              null,
+              i18n("settings.about.app.originalproject") + ":"
+            ),
             " lyrics-plus by khanhas"
           ),
           react.createElement(
@@ -3958,12 +4023,12 @@ const ConfigModal = () => {
                 lineHeight: "1.6",
               },
             },
-            "오픈소스 프로젝트에 기여해주신 모든 분들께 감사드립니다."
+            i18n("settings.about.app.opensource")
           )
         ),
         react.createElement(SectionTitle, {
-          title: "클라이언트 정보",
-          subtitle: "이 클라이언트의 고유 식별자",
+          title: i18n("settings.about.client"),
+          subtitle: i18n("settings.about.client.subtitle"),
         }),
         react.createElement(
           "div",
@@ -3989,7 +4054,7 @@ const ConfigModal = () => {
                 lineHeight: "1.6",
               },
             },
-            "계정 연동을 위해 자동으로 생성된 고유 식별자입니다. 이 값은 수정할 수 없으며, 클라이언트마다 고유하게 할당됩니다. 이 값이 절대 노출되지 않도록 주의하세요.",
+            i18n("settings.about.client.desc")
           ),
           react.createElement(
             "div",
@@ -4025,11 +4090,22 @@ const ConfigModal = () => {
               {
                 onClick: () => {
                   const clientId = StorageManager.getClientId();
-                  navigator.clipboard.writeText(clientId).then(() => {
-                    Spicetify.showNotification("클라이언트 ID가 복사되었습니다", false, 2000);
-                  }).catch(() => {
-                    Spicetify.showNotification("복사 실패", true, 2000);
-                  });
+                  navigator.clipboard
+                    .writeText(clientId)
+                    .then(() => {
+                      Spicetify.showNotification(
+                        i18n("settings.about.client.id.copied"),
+                        false,
+                        2000
+                      );
+                    })
+                    .catch(() => {
+                      Spicetify.showNotification(
+                        i18n("settings.about.client.id.failed"),
+                        true,
+                        2000
+                      );
+                    });
                 },
                 style: {
                   background: "rgba(255, 255, 255, 0.08)",
@@ -4051,13 +4127,13 @@ const ConfigModal = () => {
                   e.target.style.background = "rgba(255, 255, 255, 0.08)";
                 },
               },
-              "복사"
+              i18n("settings.about.client.id.copy")
             )
           )
         ),
         react.createElement(SectionTitle, {
-          title: "업데이트",
-          subtitle: "최신 버전 확인",
+          title: i18n("settings.about.update"),
+          subtitle: i18n("settings.about.update.subtitle"),
         }),
         react.createElement(OptionList, {
           items: [

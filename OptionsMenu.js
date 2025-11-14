@@ -672,47 +672,47 @@ const TranslationMenu = react.memo(({ friendlyLanguage, hasTranslation }) => {
 
     const items = [
       {
-        section: "변환 옵션",
-        subtitle: "가사의 발음과 번역 표시를 설정하세요",
+        section: i18n("transform.translate.options"),
+        subtitle: i18n("transform.translate.options.desc"),
         items: [
           {
             desc: react.createElement(SettingRowDescription, {
               icon: ICONS.mode,
-              text: "발음",
+              text: i18n("transform.translate.pronunciation"),
             }),
             key: `translation-mode:${modeKey}`,
             type: ConfigSlider,
             defaultValue:
               CONFIG.visual[`translation-mode:${modeKey}`] !== "none",
             renderInline: true,
-            info: "원문 가사의 발음(로마자)을 표시합니다",
+            info: i18n("transform.translate.pronunciation.desc"),
           },
           {
             desc: react.createElement(SettingRowDescription, {
               icon: ICONS.mode,
-              text: "번역",
+              text: i18n("transform.translate.translation"),
             }),
             key: `translation-mode-2:${modeKey}`,
             type: ConfigSlider,
             defaultValue:
               CONFIG.visual[`translation-mode-2:${modeKey}`] !== "none",
             renderInline: true,
-            info: "원문 가사를 한국어로 번역하여 표시합니다",
+            info: i18n("transform.translate.translation.desc"),
           },
         ],
       },
       {
-        section: "API 설정",
-        subtitle: "Gemini API를 구성하세요",
+        section: i18n("transform.api"),
+        subtitle: i18n("transform.api.desc"),
         items: [
           {
             desc: react.createElement(SettingRowDescription, {
               icon: ICONS.provider,
-              text: "API 키 설정",
+              text: i18n("transform.api.apikey"),
             }),
             key: "open-api-settings",
             type: ConfigButton,
-            text: "설정 열기",
+            text: i18n("transform.api.opensettings"),
             onChange: () => {
               // Close the current modal and open settings at API tab
               const overlay = document.getElementById(
@@ -735,13 +735,13 @@ const TranslationMenu = react.memo(({ friendlyLanguage, hasTranslation }) => {
                 }, 100);
               }, 100);
             },
-            info: "Gemini API 키를 설정하려면 여기를 클릭하세요",
+            info: i18n("transform.api.apikey.desc"),
           },
         ],
       },
     ];
 
-    openOptionsModal("변환 설정", items, (name, value) => {
+    openOptionsModal(i18n("transform.title"), items, (name, value) => {
       // Skip processing for button items
       if (name === "open-api-settings") {
         return;
@@ -778,7 +778,7 @@ const TranslationMenu = react.memo(({ friendlyLanguage, hasTranslation }) => {
 
   return react.createElement(
     Spicetify.ReactComponent.TooltipWrapper,
-    { label: "변환" },
+    { label: i18n("menu.transform") },
     react.createElement(
       "button",
       { className: "lyrics-config-button", onClick: open },
@@ -800,7 +800,7 @@ const RegenerateTranslationButton = react.memo(
   ({ onRegenerate, isEnabled, isLoading }) => {
     return react.createElement(
       Spicetify.ReactComponent.TooltipWrapper,
-      { label: "번역 재생성" },
+      { label: i18n("menu.regenerate") },
       react.createElement(
         "button",
         {
@@ -827,101 +827,100 @@ const RegenerateTranslationButton = react.memo(
   }
 );
 
-const SyncAdjustButton = react.memo(
-  ({ trackUri, onOffsetChange }) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const [offset, setOffset] = useState(0);
+const SyncAdjustButton = react.memo(({ trackUri, onOffsetChange }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [offset, setOffset] = useState(0);
 
-    // Load offset when trackUri changes
-    useEffect(() => {
-      const loadOffset = async () => {
-        const savedOffset = (await Utils.getTrackSyncOffset(trackUri)) || 0;
-        setOffset(savedOffset);
-      };
-      loadOffset();
-    }, [trackUri]);
-
-    const handleOffsetChange = async (newOffset) => {
-      setOffset(newOffset);
-      await Utils.setTrackSyncOffset(trackUri, newOffset);
-      if (onOffsetChange) {
-        onOffsetChange(newOffset);
-      }
+  // Load offset when trackUri changes
+  useEffect(() => {
+    const loadOffset = async () => {
+      const savedOffset = (await Utils.getTrackSyncOffset(trackUri)) || 0;
+      setOffset(savedOffset);
     };
+    loadOffset();
+  }, [trackUri]);
 
-    const adjustOffset = (delta) => {
-      const newOffset = Math.max(-10000, Math.min(10000, offset + delta));
-      handleOffsetChange(newOffset);
-    };
+  const handleOffsetChange = async (newOffset) => {
+    setOffset(newOffset);
+    await Utils.setTrackSyncOffset(trackUri, newOffset);
+    if (onOffsetChange) {
+      onOffsetChange(newOffset);
+    }
+  };
 
-    const handleSliderChange = (event) => {
-      const newOffset = Number(event.target.value);
-      handleOffsetChange(newOffset);
-    };
+  const adjustOffset = (delta) => {
+    const newOffset = Math.max(-10000, Math.min(10000, offset + delta));
+    handleOffsetChange(newOffset);
+  };
 
-    const resetOffset = () => {
-      handleOffsetChange(0);
-    };
+  const handleSliderChange = (event) => {
+    const newOffset = Number(event.target.value);
+    handleOffsetChange(newOffset);
+  };
 
-    const toggleModal = () => {
-      setIsOpen(!isOpen);
-    };
+  const resetOffset = () => {
+    handleOffsetChange(0);
+  };
 
-    return react.createElement(
-      react.Fragment,
-      null,
+  const toggleModal = () => {
+    setIsOpen(!isOpen);
+  };
+
+  return react.createElement(
+    react.Fragment,
+    null,
+    react.createElement(
+      Spicetify.ReactComponent.TooltipWrapper,
+      { label: i18n("menu.sync") },
       react.createElement(
-        Spicetify.ReactComponent.TooltipWrapper,
-        { label: "싱크 조절" },
+        "button",
+        {
+          className: "lyrics-config-button",
+          onClick: toggleModal,
+        },
         react.createElement(
-          "button",
+          "svg",
           {
-            className: "lyrics-config-button",
-            onClick: toggleModal,
+            width: 16,
+            height: 16,
+            viewBox: "0 0 16 16",
+            fill: "currentColor",
           },
-          react.createElement(
-            "svg",
-            {
-              width: 16,
-              height: 16,
-              viewBox: "0 0 16 16",
-              fill: "currentColor",
-            },
-            react.createElement("path", {
-              d: "M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z",
-            }),
-            react.createElement("path", {
-              d: "M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z",
-            })
-          )
+          react.createElement("path", {
+            d: "M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z",
+          }),
+          react.createElement("path", {
+            d: "M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z",
+          })
         )
-      ),
-      isOpen &&
-        react.createElement(
-          "div",
-          {
-            className: "lyrics-sync-adjust-modal",
-            style: {
-              position: "fixed",
-              bottom: "120px",
-              left: "50%",
-              transform: "translateX(-50%)",
-              background: "rgba(28, 28, 30, 0.95)",
-              backdropFilter: "blur(60px) saturate(200%)",
-              WebkitBackdropFilter: "blur(60px) saturate(200%)",
-              border: "1px solid rgba(255, 255, 255, 0.08)",
-              borderRadius: "16px",
-              padding: "20px 24px",
-              zIndex: 9999,
-              minWidth: "520px",
-              boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4)",
-              fontFamily:
-                "Pretendard Variable, -apple-system, BlinkMacSystemFont, sans-serif",
-            },
+      )
+    ),
+    isOpen &&
+      react.createElement(
+        "div",
+        {
+          className: "lyrics-sync-adjust-modal",
+          style: {
+            position: "fixed",
+            bottom: "120px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            background: "rgba(28, 28, 30, 0.95)",
+            backdropFilter: "blur(60px) saturate(200%)",
+            WebkitBackdropFilter: "blur(60px) saturate(200%)",
+            border: "1px solid rgba(255, 255, 255, 0.08)",
+            borderRadius: "16px",
+            padding: "20px 24px",
+            zIndex: 9999,
+            minWidth: "520px",
+            boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4)",
+            fontFamily:
+              "Pretendard Variable, -apple-system, BlinkMacSystemFont, sans-serif",
           },
-          react.createElement("style", {
-            dangerouslySetInnerHTML: {
-              __html: `
+        },
+        react.createElement("style", {
+          dangerouslySetInnerHTML: {
+            __html: `
 .lyrics-sync-adjust-modal .slider-container {
 	flex: 1;
 	display: flex;
@@ -994,361 +993,360 @@ const SyncAdjustButton = react.memo(
 	box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2), 0 0 1px rgba(0, 0, 0, 0.1);
 }
 `,
+          },
+        }),
+        react.createElement(
+          "div",
+          {
+            style: {
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "12px",
             },
-          }),
+          },
           react.createElement(
             "div",
             {
               style: {
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "12px",
-              },
-            },
-            react.createElement(
-              "div",
-              {
-                style: {
-                  fontSize: "16px",
-                  fontWeight: "600",
-                  color: "#ffffff",
-                  letterSpacing: "-0.01em",
-                },
-              },
-              "가사 싱크 조절"
-            ),
-            react.createElement(
-              "button",
-              {
-                onClick: toggleModal,
-                style: {
-                  background: "rgba(255, 255, 255, 0.1)",
-                  border: "none",
-                  borderRadius: "50%",
-                  color: "#ffffff",
-                  cursor: "pointer",
-                  fontSize: "18px",
-                  padding: "0",
-                  width: "28px",
-                  height: "28px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  transition: "all 0.2s ease",
-                },
-                onMouseEnter: (e) => {
-                  e.target.style.background = "rgba(255, 255, 255, 0.15)";
-                  e.target.style.transform = "scale(1.05)";
-                },
-                onMouseLeave: (e) => {
-                  e.target.style.background = "rgba(255, 255, 255, 0.1)";
-                  e.target.style.transform = "scale(1)";
-                },
-              },
-              "×"
-            )
-          ),
-          react.createElement(
-            "div",
-            {
-              style: {
-                fontSize: "13px",
-                color: "#8e8e93",
-                marginBottom: "16px",
+                fontSize: "16px",
+                fontWeight: "600",
+                color: "#ffffff",
                 letterSpacing: "-0.01em",
               },
             },
-            "슬라이더를 우측으로 이동하면, 가사가 빠르게 지나갑니다."
+            i18n("sync.title")
           ),
+          react.createElement(
+            "button",
+            {
+              onClick: toggleModal,
+              style: {
+                background: "rgba(255, 255, 255, 0.1)",
+                border: "none",
+                borderRadius: "50%",
+                color: "#ffffff",
+                cursor: "pointer",
+                fontSize: "18px",
+                padding: "0",
+                width: "28px",
+                height: "28px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "all 0.2s ease",
+              },
+              onMouseEnter: (e) => {
+                e.target.style.background = "rgba(255, 255, 255, 0.15)";
+                e.target.style.transform = "scale(1.05)";
+              },
+              onMouseLeave: (e) => {
+                e.target.style.background = "rgba(255, 255, 255, 0.1)";
+                e.target.style.transform = "scale(1)";
+              },
+            },
+            "×"
+          )
+        ),
+        react.createElement(
+          "div",
+          {
+            style: {
+              fontSize: "13px",
+              color: "#8e8e93",
+              marginBottom: "16px",
+              letterSpacing: "-0.01em",
+            },
+          },
+          i18n("sync.desc")
+        ),
+        react.createElement(
+          "div",
+          {
+            style: {
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+            },
+          },
+          // Slider
           react.createElement(
             "div",
             {
-              style: {
-                display: "flex",
-                alignItems: "center",
-                gap: "12px",
-              },
+              className: "slider-container",
             },
-            // Slider
-            react.createElement(
-              "div",
-              {
-                className: "slider-container",
+            react.createElement("input", {
+              type: "range",
+              className: "sync-slider",
+              min: -10000,
+              max: 10000,
+              step: 10,
+              value: offset,
+              onInput: handleSliderChange,
+              style: {
+                "--progress-percent": `${((offset + 10000) / 20000) * 100}%`,
               },
-              react.createElement("input", {
-                type: "range",
-                className: "sync-slider",
-                min: -10000,
-                max: 10000,
-                step: 10,
-                value: offset,
-                onInput: handleSliderChange,
-                style: {
-                  "--progress-percent": `${((offset + 10000) / 20000) * 100}%`,
-                },
-              }),
-              react.createElement(
-                "div",
-                {
-                  style: {
-                    display: "flex",
-                    justifyContent: "space-between",
-                    fontSize: "11px",
-                    color: "#8e8e93",
-                    fontWeight: "500",
-                    padding: "0 4px",
-                  },
-                },
-                react.createElement("span", null, "-10s"),
-                react.createElement(
-                  "span",
-                  {
-                    style: {
-                      color: "#ffffff",
-                      fontWeight: "600",
-                      fontSize: "14px",
-                      letterSpacing: "-0.01em",
-                    },
-                  },
-                  `${offset}ms`
-                ),
-                react.createElement("span", null, "+10s")
-              )
-            ),
-            // Fine adjustment buttons
+            }),
             react.createElement(
               "div",
               {
                 style: {
                   display: "flex",
-                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  fontSize: "11px",
+                  color: "#8e8e93",
+                  fontWeight: "500",
+                  padding: "0 4px",
+                },
+              },
+              react.createElement("span", null, "-10s"),
+              react.createElement(
+                "span",
+                {
+                  style: {
+                    color: "#ffffff",
+                    fontWeight: "600",
+                    fontSize: "14px",
+                    letterSpacing: "-0.01em",
+                  },
+                },
+                `${offset}ms`
+              ),
+              react.createElement("span", null, "+10s")
+            )
+          ),
+          // Fine adjustment buttons
+          react.createElement(
+            "div",
+            {
+              style: {
+                display: "flex",
+                flexDirection: "column",
+                gap: "6px",
+              },
+            },
+            react.createElement(
+              "div",
+              {
+                style: {
+                  display: "flex",
                   gap: "6px",
                 },
               },
               react.createElement(
-                "div",
+                "button",
                 {
+                  onClick: () => adjustOffset(-100),
                   style: {
-                    display: "flex",
-                    gap: "6px",
+                    background: "rgba(255, 255, 255, 0.08)",
+                    border: "1px solid rgba(255, 255, 255, 0.12)",
+                    borderRadius: "8px",
+                    color: "#ffffff",
+                    cursor: "pointer",
+                    padding: "6px 10px",
+                    fontSize: "12px",
+                    fontWeight: "600",
+                    minWidth: "52px",
+                    letterSpacing: "-0.01em",
+                    transition: "all 0.2s ease",
+                  },
+                  onMouseEnter: (e) => {
+                    e.target.style.background = "rgba(255, 255, 255, 0.12)";
+                    e.target.style.transform = "translateY(-1px)";
+                  },
+                  onMouseLeave: (e) => {
+                    e.target.style.background = "rgba(255, 255, 255, 0.08)";
+                    e.target.style.transform = "translateY(0)";
                   },
                 },
-                react.createElement(
-                  "button",
-                  {
-                    onClick: () => adjustOffset(-100),
-                    style: {
-                      background: "rgba(255, 255, 255, 0.08)",
-                      border: "1px solid rgba(255, 255, 255, 0.12)",
-                      borderRadius: "8px",
-                      color: "#ffffff",
-                      cursor: "pointer",
-                      padding: "6px 10px",
-                      fontSize: "12px",
-                      fontWeight: "600",
-                      minWidth: "52px",
-                      letterSpacing: "-0.01em",
-                      transition: "all 0.2s ease",
-                    },
-                    onMouseEnter: (e) => {
-                      e.target.style.background = "rgba(255, 255, 255, 0.12)";
-                      e.target.style.transform = "translateY(-1px)";
-                    },
-                    onMouseLeave: (e) => {
-                      e.target.style.background = "rgba(255, 255, 255, 0.08)";
-                      e.target.style.transform = "translateY(0)";
-                    },
-                  },
-                  "-100"
-                ),
-                react.createElement(
-                  "button",
-                  {
-                    onClick: () => adjustOffset(-10),
-                    style: {
-                      background: "rgba(255, 255, 255, 0.08)",
-                      border: "1px solid rgba(255, 255, 255, 0.12)",
-                      borderRadius: "8px",
-                      color: "#ffffff",
-                      cursor: "pointer",
-                      padding: "6px 10px",
-                      fontSize: "12px",
-                      fontWeight: "600",
-                      minWidth: "52px",
-                      letterSpacing: "-0.01em",
-                      transition: "all 0.2s ease",
-                    },
-                    onMouseEnter: (e) => {
-                      e.target.style.background = "rgba(255, 255, 255, 0.12)";
-                      e.target.style.transform = "translateY(-1px)";
-                    },
-                    onMouseLeave: (e) => {
-                      e.target.style.background = "rgba(255, 255, 255, 0.08)";
-                      e.target.style.transform = "translateY(0)";
-                    },
-                  },
-                  "-10"
-                ),
-                react.createElement(
-                  "button",
-                  {
-                    onClick: () => adjustOffset(-1),
-                    style: {
-                      background: "rgba(255, 255, 255, 0.08)",
-                      border: "1px solid rgba(255, 255, 255, 0.12)",
-                      borderRadius: "8px",
-                      color: "#ffffff",
-                      cursor: "pointer",
-                      padding: "6px 10px",
-                      fontSize: "12px",
-                      fontWeight: "600",
-                      minWidth: "52px",
-                      letterSpacing: "-0.01em",
-                      transition: "all 0.2s ease",
-                    },
-                    onMouseEnter: (e) => {
-                      e.target.style.background = "rgba(255, 255, 255, 0.12)";
-                      e.target.style.transform = "translateY(-1px)";
-                    },
-                    onMouseLeave: (e) => {
-                      e.target.style.background = "rgba(255, 255, 255, 0.08)";
-                      e.target.style.transform = "translateY(0)";
-                    },
-                  },
-                  "-1"
-                )
+                "-100"
               ),
               react.createElement(
-                "div",
+                "button",
                 {
+                  onClick: () => adjustOffset(-10),
                   style: {
-                    display: "flex",
-                    gap: "6px",
+                    background: "rgba(255, 255, 255, 0.08)",
+                    border: "1px solid rgba(255, 255, 255, 0.12)",
+                    borderRadius: "8px",
+                    color: "#ffffff",
+                    cursor: "pointer",
+                    padding: "6px 10px",
+                    fontSize: "12px",
+                    fontWeight: "600",
+                    minWidth: "52px",
+                    letterSpacing: "-0.01em",
+                    transition: "all 0.2s ease",
+                  },
+                  onMouseEnter: (e) => {
+                    e.target.style.background = "rgba(255, 255, 255, 0.12)";
+                    e.target.style.transform = "translateY(-1px)";
+                  },
+                  onMouseLeave: (e) => {
+                    e.target.style.background = "rgba(255, 255, 255, 0.08)";
+                    e.target.style.transform = "translateY(0)";
                   },
                 },
-                react.createElement(
-                  "button",
-                  {
-                    onClick: () => adjustOffset(100),
-                    style: {
-                      background: "rgba(255, 255, 255, 0.08)",
-                      border: "1px solid rgba(255, 255, 255, 0.12)",
-                      borderRadius: "8px",
-                      color: "#ffffff",
-                      cursor: "pointer",
-                      padding: "6px 10px",
-                      fontSize: "12px",
-                      fontWeight: "600",
-                      minWidth: "52px",
-                      letterSpacing: "-0.01em",
-                      transition: "all 0.2s ease",
-                    },
-                    onMouseEnter: (e) => {
-                      e.target.style.background = "rgba(255, 255, 255, 0.12)";
-                      e.target.style.transform = "translateY(-1px)";
-                    },
-                    onMouseLeave: (e) => {
-                      e.target.style.background = "rgba(255, 255, 255, 0.08)";
-                      e.target.style.transform = "translateY(0)";
-                    },
+                "-10"
+              ),
+              react.createElement(
+                "button",
+                {
+                  onClick: () => adjustOffset(-1),
+                  style: {
+                    background: "rgba(255, 255, 255, 0.08)",
+                    border: "1px solid rgba(255, 255, 255, 0.12)",
+                    borderRadius: "8px",
+                    color: "#ffffff",
+                    cursor: "pointer",
+                    padding: "6px 10px",
+                    fontSize: "12px",
+                    fontWeight: "600",
+                    minWidth: "52px",
+                    letterSpacing: "-0.01em",
+                    transition: "all 0.2s ease",
                   },
-                  "+100"
-                ),
-                react.createElement(
-                  "button",
-                  {
-                    onClick: () => adjustOffset(10),
-                    style: {
-                      background: "rgba(255, 255, 255, 0.08)",
-                      border: "1px solid rgba(255, 255, 255, 0.12)",
-                      borderRadius: "8px",
-                      color: "#ffffff",
-                      cursor: "pointer",
-                      padding: "6px 10px",
-                      fontSize: "12px",
-                      fontWeight: "600",
-                      minWidth: "52px",
-                      letterSpacing: "-0.01em",
-                      transition: "all 0.2s ease",
-                    },
-                    onMouseEnter: (e) => {
-                      e.target.style.background = "rgba(255, 255, 255, 0.12)";
-                      e.target.style.transform = "translateY(-1px)";
-                    },
-                    onMouseLeave: (e) => {
-                      e.target.style.background = "rgba(255, 255, 255, 0.08)";
-                      e.target.style.transform = "translateY(0)";
-                    },
+                  onMouseEnter: (e) => {
+                    e.target.style.background = "rgba(255, 255, 255, 0.12)";
+                    e.target.style.transform = "translateY(-1px)";
                   },
-                  "+10"
-                ),
-                react.createElement(
-                  "button",
-                  {
-                    onClick: () => adjustOffset(1),
-                    style: {
-                      background: "rgba(255, 255, 255, 0.08)",
-                      border: "1px solid rgba(255, 255, 255, 0.12)",
-                      borderRadius: "8px",
-                      color: "#ffffff",
-                      cursor: "pointer",
-                      padding: "6px 10px",
-                      fontSize: "12px",
-                      fontWeight: "600",
-                      minWidth: "52px",
-                      letterSpacing: "-0.01em",
-                      transition: "all 0.2s ease",
-                    },
-                    onMouseEnter: (e) => {
-                      e.target.style.background = "rgba(255, 255, 255, 0.12)";
-                      e.target.style.transform = "translateY(-1px)";
-                    },
-                    onMouseLeave: (e) => {
-                      e.target.style.background = "rgba(255, 255, 255, 0.08)";
-                      e.target.style.transform = "translateY(0)";
-                    },
+                  onMouseLeave: (e) => {
+                    e.target.style.background = "rgba(255, 255, 255, 0.08)";
+                    e.target.style.transform = "translateY(0)";
                   },
-                  "+1"
-                )
+                },
+                "-1"
               )
             ),
-            // Reset button
             react.createElement(
-              "button",
+              "div",
               {
-                onClick: resetOffset,
                 style: {
-                  background: "rgba(255, 59, 48, 0.15)",
-                  border: "1px solid rgba(255, 59, 48, 0.3)",
-                  borderRadius: "10px",
-                  color: "#ff3b30",
-                  cursor: "pointer",
-                  padding: "10px 16px",
-                  fontSize: "13px",
-                  fontWeight: "600",
-                  letterSpacing: "-0.01em",
-                  transition: "all 0.2s ease",
-                  whiteSpace: "nowrap",
-                },
-                onMouseEnter: (e) => {
-                  e.target.style.background = "rgba(255, 59, 48, 0.2)";
-                  e.target.style.borderColor = "rgba(255, 59, 48, 0.4)";
-                  e.target.style.transform = "translateY(-1px)";
-                },
-                onMouseLeave: (e) => {
-                  e.target.style.background = "rgba(255, 59, 48, 0.15)";
-                  e.target.style.borderColor = "rgba(255, 59, 48, 0.3)";
-                  e.target.style.transform = "translateY(0)";
+                  display: "flex",
+                  gap: "6px",
                 },
               },
-              "초기화"
+              react.createElement(
+                "button",
+                {
+                  onClick: () => adjustOffset(100),
+                  style: {
+                    background: "rgba(255, 255, 255, 0.08)",
+                    border: "1px solid rgba(255, 255, 255, 0.12)",
+                    borderRadius: "8px",
+                    color: "#ffffff",
+                    cursor: "pointer",
+                    padding: "6px 10px",
+                    fontSize: "12px",
+                    fontWeight: "600",
+                    minWidth: "52px",
+                    letterSpacing: "-0.01em",
+                    transition: "all 0.2s ease",
+                  },
+                  onMouseEnter: (e) => {
+                    e.target.style.background = "rgba(255, 255, 255, 0.12)";
+                    e.target.style.transform = "translateY(-1px)";
+                  },
+                  onMouseLeave: (e) => {
+                    e.target.style.background = "rgba(255, 255, 255, 0.08)";
+                    e.target.style.transform = "translateY(0)";
+                  },
+                },
+                "+100"
+              ),
+              react.createElement(
+                "button",
+                {
+                  onClick: () => adjustOffset(10),
+                  style: {
+                    background: "rgba(255, 255, 255, 0.08)",
+                    border: "1px solid rgba(255, 255, 255, 0.12)",
+                    borderRadius: "8px",
+                    color: "#ffffff",
+                    cursor: "pointer",
+                    padding: "6px 10px",
+                    fontSize: "12px",
+                    fontWeight: "600",
+                    minWidth: "52px",
+                    letterSpacing: "-0.01em",
+                    transition: "all 0.2s ease",
+                  },
+                  onMouseEnter: (e) => {
+                    e.target.style.background = "rgba(255, 255, 255, 0.12)";
+                    e.target.style.transform = "translateY(-1px)";
+                  },
+                  onMouseLeave: (e) => {
+                    e.target.style.background = "rgba(255, 255, 255, 0.08)";
+                    e.target.style.transform = "translateY(0)";
+                  },
+                },
+                "+10"
+              ),
+              react.createElement(
+                "button",
+                {
+                  onClick: () => adjustOffset(1),
+                  style: {
+                    background: "rgba(255, 255, 255, 0.08)",
+                    border: "1px solid rgba(255, 255, 255, 0.12)",
+                    borderRadius: "8px",
+                    color: "#ffffff",
+                    cursor: "pointer",
+                    padding: "6px 10px",
+                    fontSize: "12px",
+                    fontWeight: "600",
+                    minWidth: "52px",
+                    letterSpacing: "-0.01em",
+                    transition: "all 0.2s ease",
+                  },
+                  onMouseEnter: (e) => {
+                    e.target.style.background = "rgba(255, 255, 255, 0.12)";
+                    e.target.style.transform = "translateY(-1px)";
+                  },
+                  onMouseLeave: (e) => {
+                    e.target.style.background = "rgba(255, 255, 255, 0.08)";
+                    e.target.style.transform = "translateY(0)";
+                  },
+                },
+                "+1"
+              )
             )
+          ),
+          // Reset button
+          react.createElement(
+            "button",
+            {
+              onClick: resetOffset,
+              style: {
+                background: "rgba(255, 59, 48, 0.15)",
+                border: "1px solid rgba(255, 59, 48, 0.3)",
+                borderRadius: "10px",
+                color: "#ff3b30",
+                cursor: "pointer",
+                padding: "10px 16px",
+                fontSize: "13px",
+                fontWeight: "600",
+                letterSpacing: "-0.01em",
+                transition: "all 0.2s ease",
+                whiteSpace: "nowrap",
+              },
+              onMouseEnter: (e) => {
+                e.target.style.background = "rgba(255, 59, 48, 0.2)";
+                e.target.style.borderColor = "rgba(255, 59, 48, 0.4)";
+                e.target.style.transform = "translateY(-1px)";
+              },
+              onMouseLeave: (e) => {
+                e.target.style.background = "rgba(255, 59, 48, 0.15)";
+                e.target.style.borderColor = "rgba(255, 59, 48, 0.3)";
+                e.target.style.transform = "translateY(0)";
+              },
+            },
+            i18n("sync.reset")
           )
         )
-    );
-  }
-);
+      )
+  );
+});
 
 const SettingsMenu = react.memo(() => {
   const openSettings = () => {
@@ -1357,7 +1355,7 @@ const SettingsMenu = react.memo(() => {
 
   return react.createElement(
     Spicetify.ReactComponent.TooltipWrapper,
-    { label: "설정" },
+    { label: i18n("menu.settings") },
     react.createElement(
       "button",
       { className: "lyrics-config-button", onClick: openSettings },

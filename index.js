@@ -529,6 +529,133 @@ function render() {
   return react.createElement(LyricsContainer, null);
 }
 
+// ====================== i18n ======================
+
+const KO = {
+  "playbar.tooltip": "가사 플러스",
+
+  // 가사 페이지 오른쪽 아래 아이콘 툴팁
+  "menu.transform": "변환",
+  "menu.regenerate": "번역 재생성",
+  "menu.sync": "싱크 조절",
+  "menu.settings": "설정",
+  "menu.cache": "가사 캐시",
+  "menu.cached": "가사 캐시됨",
+  "menu.cache.nolyrics": "캐시할 가사가 없습니다",
+  "menu.cache.success": "✓ 가사가 성공적으로 캐시되었습니다",
+  "menu.cache.deleted": "✓ 캐시된 가사가 삭제되었습니다",
+  "menu.loadlyrics": "파일에서 가사 불러오기",
+  "menu.translation.cache.clear": "번역 캐시 초기화",
+
+  // modes
+  "mode.karaoke": "노래방",
+  "mode.synced": "동기화",
+  "mode.unsynced": "일반가사",
+
+  // 변환 Modal
+  "transform.title": "변환 설정",
+  "transform.translate.options": "변환 옵션",
+  "transform.translate.options.desc": "가사의 발음과 번역 표시를 설정하세요",
+  "transform.translate.pronunciation": "발음",
+  "transform.translate.pronunciation.desc":
+    "원문 가사의 발음(로마자)을 표시합니다",
+  "transform.translate.translation": "번역",
+  "transform.translate.translation.desc":
+    "원문 가사를 한국어로 번역하여 표시합니다",
+
+  "transform.api": "API 설정",
+  "transform.api.desc": "Gemini API를 구성하세요",
+  "transform.api.apikey": "API 키 설정",
+  "transform.api.opensettings": "설정 열기",
+  "transform.api.apikey.desc": "Gemini API 키를 설정하려면 여기를 클릭하세요",
+
+  // 싱크 조절 Modal
+  "sync.title": "가사 싱크 조절",
+  "sync.desc": "슬라이더를 우측으로 이동하면, 가사가 빠르게 지나갑니다.",
+  "sync.reset": "초기화",
+
+  // Lyrics Provider
+  "provider.lrclib.desc":
+    "lrclib.net에서 제공되는 가사입니다. 동기화된 가사와 동기화되지 않은 가사를 모두 지원합니다. LRCLIB은 무료 오픈소스 가사 제공자입니다.",
+  "provider.ivlyrics.desc":
+    "ivLyrics API에서 제공되는 가사입니다. 동기화된 가사, 동기화되지 않은 가사, 단어별 카라오케 가사를 지원합니다.",
+  "provider.spotify.desc": "공식 Spotify API에서 제공되는 가사입니다.",
+  "provider.local.desc":
+    "이전 Spotify 세션에서 로드된 캐시/로컬 파일의 가사를 제공합니다.",
+
+  // 설정
+  "settings.heading.support": "후원",
+  "settings.heading.support.desc": "개발자에게 커피 한잔 사주기",
+  "settings.heading.github": "Github",
+  "settings.heading.github.desc": "GitHub 저장소 방문",
+
+  "settings.general.title": "일반",
+  "settings.general.visual": "시각 효과",
+  "settings.general.visual.subtitle":
+    "가사 화면의 시각적 요소를 커스터마이징하세요",
+  "settings.general.visual.usingfullscreen":
+    "⚠️ Full Screen 확장 프로그램 사용 중",
+  "settings.general.visual.usingfullscreen.desc1":
+    "Full Screen 확장 프로그램 사용 중에는 지원하지 않습니다.",
+  "settings.general.visual.usingfullscreen.desc2":
+    "정렬 방식은 Full Screen 자체 설정에서 변경하십시오.",
+  "settings.general.visual.alignment": "정렬 방식",
+  "settings.general.visual.alignment.desc":
+    "가사 텍스트의 정렬 위치를 선택하세요",
+  "settings.general.visual.alignment.left": "왼쪽",
+  "settings.general.visual.alignment.center": "가운데",
+  "settings.general.visual.alignment.right": "오른쪽",
+  "settings.general.visual.noise": "노이즈 오버레이",
+  "settings.general.visual.noise.desc": "배경에 필름 그레인 효과를 추가합니다",
+  "settings.general.visual.colorful": "컬러풀 배경",
+  "settings.general.visual.colorful.desc":
+    "앨범 색상 기반의 동적 배경을 활성화합니다",
+
+  "settings.appearance.title": "외관",
+
+  "settings.lyrics.title": "동작",
+
+  "settings.translation.title": "제공자",
+  "settings.translation.provider": "가사 제공자",
+  "settings.translation.provider.subtitle":
+    "가사 소스의 우선순위와 설정을 관리하세요",
+  "settings.translation.provider.removecache": "캐시된 모든 가사 삭제",
+  "settings.translation.provider.nocache": "캐시된 가사 없음",
+
+  "settings.advanced.title": "고급",
+
+  "settings.about.title": "정보",
+  "settings.about.app": "앱 정보",
+  "settings.about.app.subtitle": "Lyrics Plus에 대해",
+  "settings.about.app.name": "Lyrics Plus",
+  "settings.about.app.desc": "Spicetify를 위한 한국어 대응 가사 확장 프로그램.",
+  "settings.about.app.version": "버전",
+  "settings.about.app.development": "개발",
+  "settings.about.app.originalproject": "원본 프로젝트",
+  "settings.about.app.opensource":
+    "오픈소스 프로젝트에 기여해주신 모든 분들께 감사드립니다.",
+  "settings.about.client": "클라이언트 정보",
+  "settings.about.client.subtitle": "이 클라이언트의 고유 식별자",
+  "settings.about.client.desc":
+    "계정 연동을 위해 자동으로 생성된 고유 식별자입니다. 이 값은 수정할 수 없으며, 클라이언트마다 고유하게 할당됩니다. 이 값이 절대 노출되지 않도록 주의하세요.",
+  "settings.about.client.id.copied": "클라이언트 ID가 복사되었습니다",
+  "settings.about.client.id.failed": "클라이언트 ID 복사에 실패했습니다",
+  "settings.about.client.id.copy": "복사",
+  "settings.about.update": "업데이트",
+  "settings.about.update.subtitle": "최신 버전 확인",
+};
+/**
+ * @param {keyof typeof KO} key 번역 키
+ * @returns {string} 번역된 문자열
+ */
+const i18n = (key) => {
+  if (!(key in KO)) {
+    console.warn(`i18n: Missing translation for key "${key}"`);
+    return `MISSING_TRANSLATION[${key}]`;
+  }
+  return "T:" + KO[key];
+};
+
 // Optimized utility functions with better error handling and performance
 const APP_NAME = "lyrics-plus";
 
@@ -817,51 +944,58 @@ const StorageManager = {
   getClientId() {
     const CLIENT_ID_KEY = `${APP_NAME}:client-id`;
     let clientId = this.getItemRaw(CLIENT_ID_KEY);
-    
+
     if (!clientId) {
       // Generate new UUID v4
-      clientId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        const r = Math.random() * 16 | 0;
-        const v = c === 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-      });
-      
+      clientId = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+        /[xy]/g,
+        function (c) {
+          const r = (Math.random() * 16) | 0;
+          const v = c === "x" ? r : (r & 0x3) | 0x8;
+          return v.toString(16);
+        }
+      );
+
       // Save to both storages for persistence
       this.setPersisted(CLIENT_ID_KEY, clientId);
       console.log("[Lyrics Plus] Generated new Client ID:", clientId);
     }
-    
+
     return clientId;
   },
 
   async exportConfig() {
     const config = {};
     const CLIENT_ID_KEY = `${APP_NAME}:client-id`;
-    
+
     StorageKeys.forEach((key) => {
       // Client ID는 내보내기에서 제외
       if (key === CLIENT_ID_KEY) return;
-      
+
       const val = StorageManager.getItem(key);
       if (val !== null) config[key] = StorageManager.getItem(key);
     });
-    
+
     // IndexedDB의 track-sync-offsets를 포함
     const trackSyncOffsets = await TrackSyncDB.getAllOffsets();
     if (Object.keys(trackSyncOffsets).length > 0) {
-      config["lyrics-plus:track-sync-offsets"] = JSON.stringify(trackSyncOffsets);
-      console.log("[Lyrics Plus] Exporting track-sync-offsets from IndexedDB:", trackSyncOffsets);
+      config["lyrics-plus:track-sync-offsets"] =
+        JSON.stringify(trackSyncOffsets);
+      console.log(
+        "[Lyrics Plus] Exporting track-sync-offsets from IndexedDB:",
+        trackSyncOffsets
+      );
     } else {
       console.log("[Lyrics Plus] No track-sync-offsets found in IndexedDB");
     }
-    
+
     console.log("[Lyrics Plus] Exported config keys:", Object.keys(config));
-    
+
     return config;
   },
   async importConfig(config) {
     const CLIENT_ID_KEY = `${APP_NAME}:client-id`;
-    
+
     // track-sync-offsets를 IndexedDB로 가져오기
     if (config["lyrics-plus:track-sync-offsets"]) {
       try {
@@ -870,7 +1004,10 @@ const StorageManager = {
         console.log("[Lyrics Plus] Imported track-sync-offsets to IndexedDB");
         delete config["lyrics-plus:track-sync-offsets"]; // localStorage에 저장하지 않음
       } catch (error) {
-        console.error("[Lyrics Plus] Failed to import track-sync-offsets:", error);
+        console.error(
+          "[Lyrics Plus] Failed to import track-sync-offsets:",
+          error
+        );
       }
     }
 
@@ -1156,27 +1293,27 @@ const CONFIG = {
   providers: {
     lrclib: {
       on: StorageManager.get("lyrics-plus:provider:lrclib:on"),
-      desc: "lrclib.net에서 제공되는 가사입니다. 동기화된 가사와 동기화되지 않은 가사를 모두 지원합니다. LRCLIB은 무료 오픈소스 가사 제공자입니다.",
+      desc: i18n("provider.lrclib.desc"),
       modes: [SYNCED, UNSYNCED],
     },
     ivlyrics: {
       on: StorageManager.get("lyrics-plus:provider:ivlyrics:on", true),
-      desc: "ivLyrics API에서 제공되는 가사입니다. 동기화된 가사, 동기화되지 않은 가사, 단어별 카라오케 가사를 지원합니다.",
+      desc: i18n("provider.ivlyrics.desc"),
       modes: [KARAOKE, SYNCED, UNSYNCED],
     },
     spotify: {
       on: StorageManager.get("lyrics-plus:provider:spotify:on"),
-      desc: "공식 Spotify API에서 제공되는 가사입니다.",
+      desc: i18n("provider.spotify.desc"),
       modes: [SYNCED, UNSYNCED],
     },
     local: {
       on: StorageManager.get("lyrics-plus:provider:local:on"),
-      desc: "이전 Spotify 세션에서 로드된 캐시/로컬 파일의 가사를 제공합니다.",
+      desc: i18n("provider.local.desc"),
       modes: [SYNCED, UNSYNCED],
     },
   },
   providersOrder: StorageManager.getItem("lyrics-plus:services-order"),
-  modes: ["노래방", "동기화", "일반가사"],
+  modes: [i18n("mode.karaoke"), i18n("mode.synced"), i18n("mode.unsynced")],
   locked: StorageManager.getItem("lyrics-plus:lock-mode") || "-1",
 };
 
@@ -1946,8 +2083,11 @@ class LyricsContainer extends react.Component {
       // Check if lyrics are instrumental (2 lines or less with "Instrumental" text)
       const checkInstrumental = (lyrics) => {
         if (!lyrics || lyrics.length <= 2) {
-          const text = lyrics?.map(line => line.text || '').join(' ').toLowerCase();
-          if (text && text.includes('instrumental')) {
+          const text = lyrics
+            ?.map((line) => line.text || "")
+            .join(" ")
+            .toLowerCase();
+          if (text && text.includes("instrumental")) {
             return true;
           }
         }
@@ -1955,7 +2095,7 @@ class LyricsContainer extends react.Component {
       };
 
       // If all lyrics types are instrumental, treat as no lyrics
-      const isInstrumental = 
+      const isInstrumental =
         checkInstrumental(tempState.karaoke) &&
         checkInstrumental(tempState.synced) &&
         checkInstrumental(tempState.unsynced);
@@ -1966,7 +2106,7 @@ class LyricsContainer extends react.Component {
           karaoke: null,
           synced: null,
           unsynced: null,
-          error: "Instrumental"
+          error: "Instrumental",
         };
       }
 
@@ -3810,7 +3950,9 @@ class LyricsContainer extends react.Component {
         react.createElement(
           Spicetify.ReactComponent.TooltipWrapper,
           {
-            label: this.state.isCached ? "Lyrics cached" : "Cache lyrics",
+            label: this.state.isCached
+              ? i18n("menu.cached")
+              : i18n("menu.cache"),
           },
           react.createElement(
             "button",
@@ -3820,7 +3962,7 @@ class LyricsContainer extends react.Component {
                 const { synced, unsynced, karaoke } = this.state;
                 if (!synced && !unsynced && !karaoke) {
                   Spicetify.showNotification(
-                    "No lyrics available to cache",
+                    i18n("menu.cache.nolyrics"),
                     true,
                     2000
                   );
@@ -3830,7 +3972,7 @@ class LyricsContainer extends react.Component {
                 if (this.state.isCached) {
                   this.deleteLocalLyrics(this.currentTrackUri);
                   Spicetify.showNotification(
-                    "✓ Lyrics cache deleted",
+                    i18n("menu.cache.deleted"),
                     false,
                     2000
                   );
@@ -3841,7 +3983,7 @@ class LyricsContainer extends react.Component {
                     karaoke,
                   });
                   Spicetify.showNotification(
-                    "✓ Lyrics cached successfully",
+                    i18n("menu.cache.success"),
                     false,
                     2000
                   );
@@ -3865,7 +4007,7 @@ class LyricsContainer extends react.Component {
         react.createElement(
           Spicetify.ReactComponent.TooltipWrapper,
           {
-            label: "Load lyrics from file",
+            label: i18n("menu.loadlyrics"),
           },
           react.createElement(
             "button",
@@ -3908,7 +4050,7 @@ class LyricsContainer extends react.Component {
           react.createElement(
             Spicetify.ReactComponent.TooltipWrapper,
             {
-              label: "Reset translation cache",
+              label: i18n("menu.translation.cache.clear"),
             },
             react.createElement(
               "button",
@@ -4056,34 +4198,40 @@ class LyricsContainer extends react.Component {
   const checkURLParams = () => {
     try {
       const currentPath = Spicetify.Platform.History.location.pathname;
-      const searchParams = new URLSearchParams(Spicetify.Platform.History.location.search);
-      
+      const searchParams = new URLSearchParams(
+        Spicetify.Platform.History.location.search
+      );
+
       // spotify://lyrics-plus/ 경로인지 확인
-      if (currentPath.includes('/lyrics-plus')) {
+      if (currentPath.includes("/lyrics-plus")) {
         // alert 파라미터가 있으면 알림 표시
-        const alertMessage = searchParams.get('alert');
+        const alertMessage = searchParams.get("alert");
         if (alertMessage) {
-          Spicetify.showNotification(decodeURIComponent(alertMessage), false, 3000);
-          console.log('[Lyrics Plus] URL Scheme alert:', alertMessage);
+          Spicetify.showNotification(
+            decodeURIComponent(alertMessage),
+            false,
+            3000
+          );
+          console.log("[Lyrics Plus] URL Scheme alert:", alertMessage);
         }
-        
+
         // 다른 파라미터들도 처리 가능
         // 예: action, data 등
-        const action = searchParams.get('action');
+        const action = searchParams.get("action");
         if (action) {
-          console.log('[Lyrics Plus] URL Scheme action:', action);
+          console.log("[Lyrics Plus] URL Scheme action:", action);
           // 향후 action 처리 로직 추가 가능
         }
       }
     } catch (error) {
-      console.error('[Lyrics Plus] URL Scheme error:', error);
+      console.error("[Lyrics Plus] URL Scheme error:", error);
     }
   };
-  
+
   // 초기 체크
   if (Spicetify.Platform?.History) {
     checkURLParams();
-    
+
     // History 변경 감지
     Spicetify.Platform.History.listen(() => {
       checkURLParams();
